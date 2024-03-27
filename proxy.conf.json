@@ -1,0 +1,15 @@
+{
+  "/backend": {
+    "target": "http://localhost:5012",
+    "pathRewrite": {
+      "^/backend": ""
+    },
+    "logLevel": "debug",
+    "secure": false
+  },
+  "/auth": {
+    "target": "http://localhost:8090",
+    "logLevel": "debug",
+    "secure": false
+  }
+}

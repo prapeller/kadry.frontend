@@ -1,71 +1,53 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { catchError, Observable, throwError } from 'rxjs';
-import { NbToastrService } from '@nebular/theme';
+import { catchError, map, Observable } from 'rxjs';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BackendService {
   private baseUrl = environment.BACKEND_BASE_URL;
-  private apiV1Url = '/api/v1';
+  protected apiVersionUrl: string = '/api/v1';
 
   constructor(
-    private http: HttpClient,
-    private toastrService: NbToastrService,
-    ) {}
+    private _http: HttpClient,
+    private _notificator: NotificationService,
+  ) {}
 
-  private errorHandler(error: HttpErrorResponse | string) {
-    console.error(error);
-    const errMessage = this.getErrorMessage(error);
-
-    this.toastrService.danger(errMessage, 'Unsuccessful', {
-      duration: 6000,
-      destroyByClick: true,
-    });
-    return throwError(() => error);
-  }
-
-  private getErrorFromDetail(detail: { loc: string[]; msg: string }[]): string {
-    let errorString = '';
-    detail.forEach((error) => {
-      errorString += `Field: ${error?.loc[1]} Error: ${error?.msg}\n`;
-    });
-    return errorString;
-  }
-
-  private getErrorMessage(error: HttpErrorResponse | string): string {
-    if (typeof error === 'string') {
-      return error;
-    } else if (typeof error?.error?.detail === 'string') {
-      return error?.error?.detail;
-    } else if (typeof error?.error?.detail?.error?.message === 'string') {
-      return error.error.detail.error.message;
-    } else if (error?.error?.detail?.length > 0) {
-      return this.getErrorFromDetail(error.error.detail);
-    } else if (typeof error.error?.message === 'string') {
-      return error.error.message;
-    } else if (typeof error?.statusText === 'string') {
-      return error.statusText;
-    } else {
-      return 'Something went wrong';
-    }
-  }
 
   public get<T>(_url: string, options = {}): Observable<T> {
-    return this._http.get<T>(this.baseUrl + _url, options).pipe(catchError((err) => this.errorHandler(err)));
+    return this._http.get<T>(this.baseUrl + this.apiVersionUrl + _url, options)
+      .pipe(catchError((err) => this._notificator.errorHandler(err)));
   }
 
   public post<T>(_url: string, data: any, options = {}): Observable<T> {
-    return this._http.post<T>(this.baseUrl + _url, data, options).pipe(catchError((err) => this.errorHandler(err)));
+    return this._http.post<T>(this.baseUrl + this.apiVersionUrl + _url, data, options)
+      .pipe(
+        map((resp) => this._notificator.successHandler(resp)),
+        catchError((err) => this._notificator.errorHandler(err)),
+      );
   }
 
   public put<T>(_url: string, data: any, options = {}): Observable<T> {
-    return this._http.put<T>(this.baseUrl + _url, data, options).pipe(catchError((err) => this.errorHandler(err)));
+    return this._http.put<T>(this.baseUrl + this.apiVersionUrl + _url, data, options)
+      .pipe(
+        map((resp) => this._notificator.successHandler(resp)),
+        catchError((err) => this._notificator.errorHandler(err)));
   }
 
   public delete<T>(_url: string, options = {}): Observable<T> {
-    return this._http.delete<T>(this.baseUrl + _url, options).pipe(catchError((err) => this.errorHandler(err)));
+    return this._http.delete<T>(this.baseUrl + this.apiVersionUrl + _url, options)
+      .pipe(
+        map((resp) => this._notificator.successHandler(resp)),
+        catchError((err) => this._notificator.errorHandler(err)));
   }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class BackendServiceV1 extends BackendService {
+  protected override apiVersionUrl = '/api/v1';
 }
