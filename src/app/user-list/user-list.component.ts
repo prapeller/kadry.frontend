@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../@core/services/user.service';
 import { IListUsersParams, IUserRead } from '../@core/interfaces';
-import { UserAttrsEnum } from '../@core/enums';
+import { OrderEnum, UserAttrsEnum } from '../@core/enums';
 
 @Component({
   selector: 'app-user-list',
@@ -9,27 +9,43 @@ import { UserAttrsEnum } from '../@core/enums';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  displayedColumns: string[] = ['actions', 'mail', 'cn', 'sn', 'businessCategory'];
+  displayedColumns: string[] = ['actions', 'createTimestamp', 'mail', 'cn', 'sn', 'businessCategory'];
   users: IUserRead[] = [];
-  pageSizeOptions = [20, 50, 100];
-  pageSize = 20;
+  pageSizeOptions = [15, 50, 100];
+  pageSize = 15;
   currentPage = 0;
   totalUsersCount = 0;
   filteredUsersCount = 0;
-  searchTerm: UserAttrsEnum | null = null;
+  searchAttr: UserAttrsEnum | null = null;
   searchValue: string | null = null;
-
+  currentOrder: OrderEnum = OrderEnum.desc;
+  currentOrderBy: UserAttrsEnum = UserAttrsEnum.createTimestamp;
 
   constructor(private userService: UserService) {}
 
   ngOnInit() {
-    this.loadUsers()
+    this.flushSorting();
+    this.loadUsers();
+  }
+
+  private flushSorting() {
+    this.currentOrder = OrderEnum.desc;
+    this.currentOrderBy = UserAttrsEnum.createTimestamp;
   }
 
   private loadUsers() {
-    const queryParams: IListUsersParams = { limit: this.pageSize, offset: this.currentPage * this.pageSize };
-    if (this.searchTerm && this.searchValue) {
-      queryParams.attr = this.searchTerm;
+    const queryParams: IListUsersParams = {
+      order: this.currentOrder,
+      order_by: this.currentOrderBy,
+      limit: this.pageSize,
+      offset: this.currentPage * this.pageSize,
+    };
+    if (this.currentOrder && this.currentOrderBy) {
+      queryParams.order = this.currentOrder;
+      queryParams.order_by = this.currentOrderBy;
+    }
+    if (this.searchAttr && this.searchValue) {
+      queryParams.attr = this.searchAttr;
       queryParams.attr_value = this.searchValue;
     }
     this.userService.usersList(queryParams).subscribe(resp => {
@@ -38,10 +54,21 @@ export class UserListComponent implements OnInit {
       this.filteredUsersCount = resp.filtered_users_count;
     });
   }
-  searchUser(term: UserAttrsEnum, value: string) {
-    this.searchTerm = term;
-    this.searchValue = value;
+
+  searchUser(attr: UserAttrsEnum, attrValue: string) {
+    this.searchAttr = attr;
+    this.searchValue = attrValue;
     this.currentPage = 0;
+    this.loadUsers();
+  }
+
+  public onSortChange(event: any) {
+    if (event.direction === '') {
+      this.flushSorting();
+    } else {
+      this.currentOrder = event.direction;
+      this.currentOrderBy = event.active;
+    }
     this.loadUsers();
   }
 

@@ -13,7 +13,7 @@ export class NotificationService {
   ) {}
 
   public showMessage(messageType: MessageTypeEnum, message: string) {
-    if (messageType === MessageTypeEnum.Error) {
+    if (messageType === MessageTypeEnum.error) {
       this.snackBar.open(message, 'Close', { duration: 0 }); // Persistent snackbar for errors
     } else {
       this.snackBar.open(message, 'Close', { duration: 2000 }); // Auto-close after 2 seconds for success messages
@@ -50,14 +50,14 @@ export class NotificationService {
     console.error(err);
     const errMessage = this.getErrorMessage(err);
 
-    this.showMessage(MessageTypeEnum.Error, errMessage);
+    this.showMessage(MessageTypeEnum.error, errMessage);
     return throwError(() => err);
   }
 
   public successHandler<T>(response: T): T {
     if (response && typeof response === 'object' && 'message' in response) {
       const message = (response as any).message;
-      this.showMessage(message, 'Success');
+      this.showMessage(MessageTypeEnum.success, message);
     }
     return response;
   }

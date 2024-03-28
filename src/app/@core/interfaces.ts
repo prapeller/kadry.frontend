@@ -1,4 +1,4 @@
-import { UserAttrsEnum, UserBusinessCategoriesEnum } from './enums';
+import { OrderEnum, UserAttrsEnum, UserBusinessCategoriesEnum } from './enums';
 
 export interface IFileData {
   file: File;
@@ -14,10 +14,12 @@ export interface IDefaultBusinessCategoriesParams {
 
 
 export interface IListUsersParams {
-  attr?: UserAttrsEnum;
-  attr_value?: string;
   limit: number;
   offset: number;
+  order: OrderEnum;
+  order_by: UserAttrsEnum;
+  attr?: UserAttrsEnum;
+  attr_value?: string;
 }
 
 export interface IUserRead {
@@ -48,7 +50,7 @@ export interface IUserCreate {
   cn: string;
   sn: string;
   userPassword: string;
-  businessCategory: string[];    // # apps
+  businessCategory: string[];     // # apps
   telephoneNumber?: string;       // # telegramId
   displayName?: string;           // # teamleadEmail
   employeeType?: string[];        // # roles

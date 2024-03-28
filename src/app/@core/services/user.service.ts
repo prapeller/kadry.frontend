@@ -30,6 +30,8 @@ export class UserService {
 
   public usersList(queryParams: IListUsersParams): Observable<IUsersPaginated> {
     let paramsObj: { [key: string]: string | string[] } = {};
+    paramsObj['order'] = queryParams.order;
+    paramsObj['order_by'] = queryParams.order_by;
     paramsObj['limit'] = queryParams.limit.toString();
     paramsObj['offset'] = queryParams.offset.toString();
 
@@ -62,7 +64,7 @@ export class UserService {
 
   public usersCreateOrUpdateFromExcel(data: IFileData, queryParams: IDefaultBusinessCategoriesParams | null) {
     if (data.file.type != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      return this._notificator.showMessage(MessageTypeEnum.Error, 'Only Excel files are allowed.');
+      return this._notificator.showMessage(MessageTypeEnum.error, 'Only Excel files are allowed.');
     }
 
     let params = new HttpParams({ fromObject: {} });
@@ -83,7 +85,7 @@ export class UserService {
 
   public usersUpdateFromExcel(data: IFileData) {
     if (data.file.type != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      return this._notificator.showMessage(MessageTypeEnum.Error, 'Only Excel files are allowed.');
+      return this._notificator.showMessage(MessageTypeEnum.error, 'Only Excel files are allowed.');
     }
     const formData: FormData = new FormData();
     formData.append('file', data.file, data.file.name);

@@ -1,9 +1,15 @@
 export enum MessageTypeEnum {
-  Error = 'Error',
-  Success = 'Success'
+  error = 'error',
+  success = 'success'
+}
+
+export enum OrderEnum {
+  asc = 'asc',
+  desc = 'desc',
 }
 
 export enum UserAttrsEnum {
+  createTimestamp = 'createTimestamp',
   mail = 'mail',
   cn = 'cn',
   sn = 'sn',
@@ -14,7 +20,6 @@ export enum UserAttrsEnum {
   employeeType = 'employeeType',
   employeeNumber = 'employeeNumber',
   creatorsName = 'creatorsName',
-  createTimestamp = 'createTimestamp',
   modifyTimestamp = 'modifyTimestamp',
   structuralObjectClass = 'structuralObjectClass',
   entryUUID = 'entryUUID'
