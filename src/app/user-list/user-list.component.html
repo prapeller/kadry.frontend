@@ -88,9 +88,18 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <mat-paginator [length]="filteredUsersCount"
-                 [pageSize]="pageSize"
-                 [pageSizeOptions]="pageSizeOptions"
-                 (page)="onPaginateChange($event)">
-  </mat-paginator>
+  <div class="paginator-container">
+    <button mat-icon-button (click)="goToFirstPage()" aria-label="First page">
+      <mat-icon>first_page</mat-icon>
+    </button>
+    <mat-paginator [length]="filteredUsersCount"
+                   [pageSize]="pageSize"
+                   [pageSizeOptions]="pageSizeOptions"
+                   (page)="onPaginateChange($event)">
+    </mat-paginator>
+    <button mat-icon-button (click)="goToLastPage()" aria-label="Last page">
+      <mat-icon>last_page</mat-icon>
+    </button>
+  </div>
+
 </div>

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../@core/services/user.service';
 import { IListUsersParams, IUserRead } from '../@core/interfaces';
 import { OrderEnum, UserAttrsEnum } from '../@core/enums';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user-list',
@@ -9,6 +10,7 @@ import { OrderEnum, UserAttrsEnum } from '../@core/enums';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   displayedColumns: string[] = ['actions', 'createTimestamp', 'mail', 'cn', 'sn', 'businessCategory'];
   users: IUserRead[] = [];
   pageSizeOptions = [15, 50, 100];
@@ -31,6 +33,18 @@ export class UserListComponent implements OnInit {
   private flushSorting() {
     this.currentOrder = OrderEnum.desc;
     this.currentOrderBy = UserAttrsEnum.createTimestamp;
+  }
+
+  goToFirstPage() {
+    if (this.paginator) {
+      this.paginator.firstPage();
+    }
+  }
+
+  goToLastPage() {
+    if (this.paginator) {
+      this.paginator.lastPage();
+    }
   }
 
   private loadUsers() {
