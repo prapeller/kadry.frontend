@@ -1,29 +1,30 @@
-<div class="mat-elevation-z8">
-  <table mat-table [dataSource]="users" matSort (matSortChange)="onSortChange($event)" class="mat-elevation-z8">
+<div class="table-cntr">
+
+  <table mat-table [dataSource]="users" matSort (matSortChange)="onSortChange($event)">
 
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions</th>
       <td mat-cell *matCellDef="let user">
-        <button mat-icon-button (click)="onEdit(user)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button (click)="onDelete(user.mail)">
-          <mat-icon>delete</mat-icon>
-        </button>
+        <div class="action-buttons">
+          <button mat-icon-button (click)="onEdit(user)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="onDelete(user.mail)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </td>
     </ng-container>
 
     <!-- User Columns -->
     <ng-container matColumnDef="createTimestamp">
       <th mat-header-cell *matHeaderCellDef>
-        <div class="header-content">
-          <div class="input-sort-wrapper">
-            <input #createTimestampInput placeholder="createTimestamp"
-                   (keyup.enter)="searchUser(UserAttrsEnum.createTimestamp, createTimestampInput.value)"
-                   [value]="searchAttr === UserAttrsEnum.createTimestamp ? searchValue : ''">
-            <div mat-sort-header="createTimestamp"></div>
-          </div>
+        <div class="input-sort-wrapper">
+          <input #createTimestampInput placeholder="createTimestamp"
+                 (keyup.enter)="searchUser(UserAttrsEnum.createTimestamp, createTimestampInput.value)"
+                 [value]="searchAttr === UserAttrsEnum.createTimestamp ? searchValue : ''">
+          <div mat-sort-header="createTimestamp"></div>
         </div>
       </th>
       <td mat-cell *matCellDef="let user"> {{ user.createTimestamp }}</td>
@@ -31,75 +32,72 @@
 
     <ng-container matColumnDef="mail">
       <th mat-header-cell *matHeaderCellDef>
-        <div class="header-content">
-          <div class="input-sort-wrapper">
-            <input #mailInput placeholder="mail"
-                   (keyup.enter)="searchUser(UserAttrsEnum.mail, mailInput.value)"
-                   [value]="searchAttr === UserAttrsEnum.mail ? searchValue : ''">
-            <div mat-sort-header="mail"></div>
-          </div>
+        <div class="input-sort-wrapper">
+          <input #mailInput placeholder="mail"
+                 (keyup.enter)="searchUser(UserAttrsEnum.mail, mailInput.value)"
+                 [value]="searchAttr === UserAttrsEnum.mail ? searchValue : ''">
+          <div mat-sort-header="mail"></div>
         </div>
       </th>
-      <td mat-cell *matCellDef="let user"> {{ user.mail }}</td>
+      <td mat-cell *matCellDef="let user" [matTooltip]="user.mail"
+          matTooltipShowDelay="800"> {{ user.mail }}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="cn">
       <th mat-header-cell *matHeaderCellDef>
-        <div class="header-content">
-          <div class="input-sort-wrapper">
-            <input #cnInput placeholder="cn" (keyup.enter)="searchUser(UserAttrsEnum.cn, cnInput.value)"
-                   [value]="searchAttr === UserAttrsEnum.cn ? searchValue : ''">
-            <div mat-sort-header="cn"></div>
-          </div>
+        <div class="input-sort-wrapper">
+          <input #cnInput placeholder="cn" (keyup.enter)="searchUser(UserAttrsEnum.cn, cnInput.value)"
+                 [value]="searchAttr === UserAttrsEnum.cn ? searchValue : ''">
+          <div mat-sort-header="cn"></div>
         </div>
       </th>
-      <td mat-cell *matCellDef="let user"> {{ user.cn }}</td>
+      <td mat-cell *matCellDef="let user" [matTooltip]="user.cn"
+          matTooltipShowDelay="800"> {{ user.cn }}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="sn">
       <th mat-header-cell *matHeaderCellDef>
-        <div class="header-content">
-          <div class="input-sort-wrapper">
-            <input #snInput placeholder="sn" (keyup.enter)="searchUser(UserAttrsEnum.sn, snInput.value)"
-                   [value]="searchAttr === UserAttrsEnum.sn ? searchValue : ''">
-            <div mat-sort-header="sn"></div>
-          </div>
+        <div class="input-sort-wrapper">
+          <input #snInput placeholder="sn" (keyup.enter)="searchUser(UserAttrsEnum.sn, snInput.value)"
+                 [value]="searchAttr === UserAttrsEnum.sn ? searchValue : ''">
+          <div mat-sort-header="sn"></div>
         </div>
       </th>
-      <td mat-cell *matCellDef="let user"> {{ user.sn }}</td>
+      <td mat-cell *matCellDef="let user" [matTooltip]="user.sn"
+          matTooltipShowDelay="800"> {{ user.sn }}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="businessCategory">
       <th mat-header-cell *matHeaderCellDef>
-        <div class="header-content">
-          <div class="input-sort-wrapper">
-            <input #businessCategoryInput placeholder="businessCategory"
-                   (keyup.enter)="searchUser(UserAttrsEnum.businessCategory, businessCategoryInput.value)"
-                   [value]="searchAttr === UserAttrsEnum.businessCategory ? searchValue : ''">
-          </div>
+        <div class="input-sort-wrapper">
+          <input #businessCategoryInput placeholder="businessCategory"
+                 (keyup.enter)="searchUser(UserAttrsEnum.businessCategory, businessCategoryInput.value)"
+                 [value]="searchAttr === UserAttrsEnum.businessCategory ? searchValue : ''">
         </div>
       </th>
-      <td mat-cell *matCellDef="let user"> {{ user.businessCategory }}</td>
+      <td mat-cell *matCellDef="let user" [matTooltip]="user.businessCategory"
+          matTooltipShowDelay="800"> {{ user.businessCategory }}
+      </td>
     </ng-container>
 
     <!-- Additional columns here -->
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
   </table>
 
-  <div class="paginator-container">
-    <button mat-icon-button (click)="goToFirstPage()" aria-label="First page">
-      <mat-icon>first_page</mat-icon>
-    </button>
-    <mat-paginator [length]="filteredUsersCount"
-                   [pageSize]="pageSize"
-                   [pageSizeOptions]="pageSizeOptions"
-                   (page)="onPaginateChange($event)">
+  <div class="paginator-cntr">
+    <mat-paginator
+      [length]="filteredUsersCount"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onPaginateChange($event)"
+      showFirstLastButtons>
     </mat-paginator>
-    <button mat-icon-button (click)="goToLastPage()" aria-label="Last page">
-      <mat-icon>last_page</mat-icon>
-    </button>
   </div>
-
 </div>
+

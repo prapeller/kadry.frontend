@@ -16,6 +16,7 @@ import { UserListComponent } from './user-list/user-list.component';
 import { AuthGuard } from './@core/guards/auth-guard';
 
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -48,6 +49,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatButtonModule, // For buttons
     MatIconModule, // For icons
     MatPaginatorModule, // For pagination
+    MatTooltipModule
   ],
   providers: [
     {

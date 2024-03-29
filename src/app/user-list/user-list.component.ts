@@ -10,11 +10,11 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  // @ViewChild(MatPaginator) paginator!: MatPaginator;
   displayedColumns: string[] = ['actions', 'createTimestamp', 'mail', 'cn', 'sn', 'businessCategory'];
   users: IUserRead[] = [];
-  pageSizeOptions = [15, 50, 100];
-  pageSize = 15;
+  pageSizeOptions = [20, 50, 100];
+  pageSize = 20;
   currentPage = 0;
   totalUsersCount = 0;
   filteredUsersCount = 0;
@@ -35,17 +35,17 @@ export class UserListComponent implements OnInit {
     this.currentOrderBy = UserAttrsEnum.createTimestamp;
   }
 
-  goToFirstPage() {
-    if (this.paginator) {
-      this.paginator.firstPage();
-    }
-  }
+  // goToFirstPage() {
+  //   if (this.paginator) {
+  //     this.paginator.firstPage();
+  //   }
+  // }
 
-  goToLastPage() {
-    if (this.paginator) {
-      this.paginator.lastPage();
-    }
-  }
+  // goToLastPage() {
+  //   if (this.paginator) {
+  //     this.paginator.lastPage();
+  //   }
+  // }
 
   private loadUsers() {
     const queryParams: IListUsersParams = {
