@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from '../@core/services/user.service';
 import { IListUsersParams, IUserRead } from '../@core/interfaces';
 import { OrderEnum, UserAttrsEnum } from '../@core/enums';
-import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user-list',
@@ -10,53 +9,58 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  // @ViewChild(MatPaginator) paginator!: MatPaginator;
-  displayedColumns: string[] = ['actions', 'createTimestamp', 'mail', 'cn', 'sn', 'businessCategory'];
+  displayedColumns: string[] = [
+    'actions',
+    UserAttrsEnum.createTimestamp,
+    UserAttrsEnum.entryUUID,
+    UserAttrsEnum.mail,
+    UserAttrsEnum.cn,
+    UserAttrsEnum.sn,
+    UserAttrsEnum.businessCategory,
+  ];
   users: IUserRead[] = [];
   pageSizeOptions = [20, 50, 100];
   pageSize = 20;
   currentPage = 0;
   totalUsersCount = 0;
   filteredUsersCount = 0;
-  searchAttr: UserAttrsEnum | null = null;
-  searchValue: string | null = null;
-  currentOrder: OrderEnum = OrderEnum.desc;
-  currentOrderBy: UserAttrsEnum = UserAttrsEnum.createTimestamp;
+
+  order: OrderEnum = OrderEnum.desc;
+  orderBy: UserAttrsEnum = UserAttrsEnum.createTimestamp;
+
+  searchAttr: UserAttrsEnum = UserAttrsEnum.createTimestamp;
+  searchValue: string = '';
+
+  entryUUIDSearchValue: string = '';
+  createTimestampSearchValue: string = '';
+  mailSearchValue: string = '';
+  cnSearchValue: string = '';
+  snSearchValue: string = '';
+  businessCategorySearchValue: string = '';
 
   constructor(private userService: UserService) {}
 
   ngOnInit() {
-    this.flushSorting();
+    this.clearSorting();
+    this.clearSearchInput();
     this.loadUsers();
   }
 
-  private flushSorting() {
-    this.currentOrder = OrderEnum.desc;
-    this.currentOrderBy = UserAttrsEnum.createTimestamp;
+  private clearSorting() {
+    this.order = OrderEnum.desc;
+    this.orderBy = UserAttrsEnum.createTimestamp;
   }
-
-  // goToFirstPage() {
-  //   if (this.paginator) {
-  //     this.paginator.firstPage();
-  //   }
-  // }
-
-  // goToLastPage() {
-  //   if (this.paginator) {
-  //     this.paginator.lastPage();
-  //   }
-  // }
 
   private loadUsers() {
     const queryParams: IListUsersParams = {
-      order: this.currentOrder,
-      order_by: this.currentOrderBy,
+      order: this.order,
+      order_by: this.orderBy,
       limit: this.pageSize,
       offset: this.currentPage * this.pageSize,
     };
-    if (this.currentOrder && this.currentOrderBy) {
-      queryParams.order = this.currentOrder;
-      queryParams.order_by = this.currentOrderBy;
+    if (this.order && this.orderBy) {
+      queryParams.order = this.order;
+      queryParams.order_by = this.orderBy;
     }
     if (this.searchAttr && this.searchValue) {
       queryParams.attr = this.searchAttr;
@@ -69,19 +73,30 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  searchUser(attr: UserAttrsEnum, attrValue: string) {
-    this.searchAttr = attr;
-    this.searchValue = attrValue;
+  private getNormalizedDate(date: string): string {
+    const localDate = new Date(date);
+    const timezoneOffset = localDate.getTimezoneOffset() * 60000;
+    const adjustedDate = new Date(localDate.getTime() - timezoneOffset);
+    return new Date(adjustedDate).toISOString().split('T')[0];
+  }
+
+  searchUsers(attr: UserAttrsEnum, attrValue: string) {
     this.currentPage = 0;
+    if (attr === UserAttrsEnum.createTimestamp) {
+      this.searchValue = this.getNormalizedDate(attrValue);
+    } else {
+      this.searchValue = attrValue;
+    }
+    this.searchAttr = attr;
     this.loadUsers();
   }
 
   public onSortChange(event: any) {
     if (event.direction === '') {
-      this.flushSorting();
+      this.clearSorting();
     } else {
-      this.currentOrder = event.direction;
-      this.currentOrderBy = event.active;
+      this.order = event.direction;
+      this.orderBy = event.active;
     }
     this.loadUsers();
   }
@@ -89,6 +104,20 @@ export class UserListComponent implements OnInit {
   public onPaginateChange(event: any) {
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex;
+    this.loadUsers();
+  }
+
+  public clearSearchInput() {
+    this.searchAttr = UserAttrsEnum.createTimestamp;
+    this.searchValue = '';
+
+    this.entryUUIDSearchValue = '';
+    this.createTimestampSearchValue = '';
+    this.mailSearchValue = '';
+    this.cnSearchValue = '';
+    this.snSearchValue = '';
+    this.businessCategorySearchValue = '';
+
     this.loadUsers();
   }
 

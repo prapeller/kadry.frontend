@@ -44,8 +44,18 @@
     align-items: center; /* Align the buttons vertically in the center, if needed */
 }
 
-.mat-column-actions,
-.mat-column-createTimestamp,
+.mat-column-actions {
+    max-width: 100px;
+    min-width: 100px;
+}
+
+.mat-column-createTimestamp {
+    text-align: center;
+    max-width: 200px;
+    min-width: 200px;
+}
+
+.mat-column-entryUUID,
 .mat-column-mail,
 .mat-column-cn,
 .mat-column-sn,
@@ -69,10 +79,11 @@
 }
 
 .mat-sort-header-container {
-  position: relative;
+    position: relative;
 }
 
 ::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
-  opacity: 0.25 !important;
-  transform: translateY(0px) !important;
+    opacity: 0.25 !important;
+    transform: translateY(0px) !important;
 }
+

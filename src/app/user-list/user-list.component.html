@@ -18,25 +18,64 @@
     </ng-container>
 
     <!-- User Columns -->
-    <ng-container matColumnDef="createTimestamp">
+    <ng-container matColumnDef='{{UserAttrsEnum.createTimestamp}}'>
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
-          <input #createTimestampInput placeholder="createTimestamp"
-                 (keyup.enter)="searchUser(UserAttrsEnum.createTimestamp, createTimestampInput.value)"
-                 [value]="searchAttr === UserAttrsEnum.createTimestamp ? searchValue : ''">
-          <div mat-sort-header="createTimestamp"></div>
+          <mat-form-field>
+            <input matInput [matDatepicker]="picker"
+                   placeholder="{{UserAttrsEnum.createTimestamp}}"
+                   [(ngModel)]="createTimestampSearchValue"
+                   (keyup.enter)="searchUsers(UserAttrsEnum.createTimestamp, createTimestampSearchValue)"
+                   (dateChange)="searchUsers(UserAttrsEnum.createTimestamp, createTimestampSearchValue)"
+            >
+            <button mat-icon-button *ngIf="createTimestampSearchValue !== ''" matSuffix aria-label="Clear"
+                    (click)="clearSearchInput()">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <div mat-sort-header='{{ UserAttrsEnum.createTimestamp }}'></div>
         </div>
       </th>
-      <td mat-cell *matCellDef="let user"> {{ user.createTimestamp }}</td>
+      <td mat-cell *matCellDef="let user"> {{ user.createTimestamp | date:'M/dd/yyyy HH:mm' }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="mail">
+    <ng-container matColumnDef='{{ UserAttrsEnum.entryUUID }}'>
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
-          <input #mailInput placeholder="mail"
-                 (keyup.enter)="searchUser(UserAttrsEnum.mail, mailInput.value)"
-                 [value]="searchAttr === UserAttrsEnum.mail ? searchValue : ''">
-          <div mat-sort-header="mail"></div>
+          <mat-form-field class="example-form-field">
+            <input matInput type="text" placeholder='{{ UserAttrsEnum.entryUUID }}'
+                   [(ngModel)]="entryUUIDSearchValue"
+                   (keyup.enter)="searchUsers(UserAttrsEnum.entryUUID, entryUUIDSearchValue)"
+            >
+            <button mat-icon-button *ngIf="entryUUIDSearchValue" matSuffix aria-label="Clear"
+                    (click)="clearSearchInput()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <div mat-sort-header='{{ UserAttrsEnum.entryUUID }}'></div>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let user" [matTooltip]="user.entryUUID"
+          matTooltipShowDelay="800"> {{ user.entryUUID }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef='{{ UserAttrsEnum.mail }}'>
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="input-sort-wrapper">
+          <mat-form-field class="example-form-field">
+            <input matInput type="text" placeholder='{{ UserAttrsEnum.mail }}'
+                   [(ngModel)]="mailSearchValue"
+                   (keyup.enter)="searchUsers(UserAttrsEnum.mail, mailSearchValue)"
+            >
+            <button mat-icon-button *ngIf="mailSearchValue" matSuffix aria-label="Clear"
+                    (click)="clearSearchInput()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <div mat-sort-header='{{ UserAttrsEnum.mail }}'></div>
         </div>
       </th>
       <td mat-cell *matCellDef="let user" [matTooltip]="user.mail"
@@ -44,12 +83,20 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="cn">
+    <ng-container matColumnDef='{{ UserAttrsEnum.cn }}'>
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
-          <input #cnInput placeholder="cn" (keyup.enter)="searchUser(UserAttrsEnum.cn, cnInput.value)"
-                 [value]="searchAttr === UserAttrsEnum.cn ? searchValue : ''">
-          <div mat-sort-header="cn"></div>
+          <mat-form-field class="example-form-field">
+            <input matInput type="text" placeholder="{{ UserAttrsEnum.cn }}"
+                   [(ngModel)]="cnSearchValue"
+                   (keyup.enter)="searchUsers(UserAttrsEnum.cn, cnSearchValue)"
+            >
+            <button mat-icon-button *ngIf="cnSearchValue" matSuffix aria-label="Clear"
+                    (click)="clearSearchInput()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <div mat-sort-header='{{ UserAttrsEnum.cn }}'></div>
         </div>
       </th>
       <td mat-cell *matCellDef="let user" [matTooltip]="user.cn"
@@ -57,12 +104,20 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="sn">
+    <ng-container matColumnDef='{{ UserAttrsEnum.sn }}'>
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
-          <input #snInput placeholder="sn" (keyup.enter)="searchUser(UserAttrsEnum.sn, snInput.value)"
-                 [value]="searchAttr === UserAttrsEnum.sn ? searchValue : ''">
-          <div mat-sort-header="sn"></div>
+          <mat-form-field class="example-form-field">
+            <input matInput type="text" placeholder="{{ UserAttrsEnum.sn }}"
+                   [(ngModel)]="snSearchValue"
+                   (keyup.enter)="searchUsers(UserAttrsEnum.sn, snSearchValue)"
+            >
+            <button mat-icon-button *ngIf="snSearchValue" matSuffix aria-label="Clear"
+                    (click)="clearSearchInput()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <div mat-sort-header='{{ UserAttrsEnum.sn }}'></div>
         </div>
       </th>
       <td mat-cell *matCellDef="let user" [matTooltip]="user.sn"
@@ -70,12 +125,19 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="businessCategory">
+    <ng-container matColumnDef='{{ UserAttrsEnum.businessCategory }}'>
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
-          <input #businessCategoryInput placeholder="businessCategory"
-                 (keyup.enter)="searchUser(UserAttrsEnum.businessCategory, businessCategoryInput.value)"
-                 [value]="searchAttr === UserAttrsEnum.businessCategory ? searchValue : ''">
+          <mat-form-field class="example-form-field">
+            <input matInput type="text" placeholder="{{ UserAttrsEnum.businessCategory }}"
+                   [(ngModel)]="businessCategorySearchValue"
+                   (keyup.enter)="searchUsers(UserAttrsEnum.businessCategory, businessCategorySearchValue)"
+            >
+            <button mat-icon-button *ngIf="businessCategorySearchValue" matSuffix aria-label="Clear"
+                    (click)="clearSearchInput()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
         </div>
       </th>
       <td mat-cell *matCellDef="let user" [matTooltip]="user.businessCategory"
