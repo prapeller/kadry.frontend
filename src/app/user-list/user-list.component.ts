@@ -9,16 +9,18 @@ import { OrderEnum, UserAttrsEnum } from '../@core/enums';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
+  users: IUserRead[] = [];
+
   displayedColumns: string[] = [
     'actions',
-    UserAttrsEnum.createTimestamp,
-    UserAttrsEnum.entryUUID,
     UserAttrsEnum.mail,
     UserAttrsEnum.cn,
     UserAttrsEnum.sn,
     UserAttrsEnum.businessCategory,
+    UserAttrsEnum.createTimestamp,
+    UserAttrsEnum.entryUUID,
   ];
-  users: IUserRead[] = [];
+
   pageSizeOptions = [20, 50, 100];
   pageSize = 20;
   currentPage = 0;
@@ -80,7 +82,7 @@ export class UserListComponent implements OnInit {
     return new Date(adjustedDate).toISOString().split('T')[0];
   }
 
-  searchUsers(attr: UserAttrsEnum, attrValue: string) {
+  public searchUsers(attr: UserAttrsEnum, attrValue: string) {
     this.currentPage = 0;
     if (attr === UserAttrsEnum.createTimestamp) {
       this.searchValue = this.getNormalizedDate(attrValue);
@@ -121,11 +123,11 @@ export class UserListComponent implements OnInit {
     this.loadUsers();
   }
 
-  onDelete(mail: string) {
+  public onDelete(mail: string) {
     // Implement deletion logic here
   }
 
-  onEdit(user: IUserRead) {
+  public onEdit(user: IUserRead) {
     // Implement edit logic here
   }
 
