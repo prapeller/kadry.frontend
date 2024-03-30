@@ -1,6 +1,6 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
@@ -21,6 +22,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { AuthGuard } from './@core/guards/auth-guard';
+import { SpinnerInterceptor } from './@core/interceptors/spinner.interceptor';
 
 
 function initializeKeycloak(keycloak: KeycloakService) {
@@ -60,6 +62,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatProgressSpinner,
   ],
   providers: [
     {
@@ -67,6 +70,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
       useFactory: initializeKeycloak,
       multi: true,
       deps: [KeycloakService],
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SpinnerInterceptor,
+      multi: true,
     },
     AuthGuard,
   ],

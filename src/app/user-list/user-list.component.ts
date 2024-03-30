@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../@core/services/user.service';
 import { IListUsersParams, IUserRead } from '../@core/interfaces';
 import { OrderEnum, UserAttrsEnum } from '../@core/enums';
+import { SpinnerService } from '../@core/services/spinner.service';
 
 @Component({
   selector: 'app-user-list',
@@ -21,17 +22,8 @@ export class UserListComponent implements OnInit {
     UserAttrsEnum.entryUUID,
   ];
 
-  pageSizeOptions = [20, 50, 100];
-  pageSize = 20;
-  currentPage = 0;
-  totalUsersCount = 0;
-  filteredUsersCount = 0;
-
-  order: OrderEnum = OrderEnum.desc;
-  orderBy: UserAttrsEnum = UserAttrsEnum.createTimestamp;
-
-  searchAttr: UserAttrsEnum = UserAttrsEnum.createTimestamp;
-  searchValue: string = '';
+  searchAttr?: UserAttrsEnum;
+  searchValue?: string;
 
   entryUUIDSearchValue: string = '';
   createTimestampSearchValue: string = '';
@@ -40,7 +32,17 @@ export class UserListComponent implements OnInit {
   snSearchValue: string = '';
   businessCategorySearchValue: string = '';
 
-  constructor(private userService: UserService) {}
+  order: OrderEnum = OrderEnum.desc;
+  orderBy: UserAttrsEnum = UserAttrsEnum.createTimestamp;
+
+  pageSizeOptions = [20, 50, 100];
+  pageSize = 20;
+  currentPage = 0;
+  totalUsersCount = 0;
+  filteredUsersCount = 0;
+
+  constructor(private userService: UserService,
+              protected spinnerService: SpinnerService) {}
 
   ngOnInit() {
     this.clearSorting();

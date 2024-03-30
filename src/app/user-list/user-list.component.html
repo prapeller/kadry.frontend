@@ -1,3 +1,7 @@
+<div class="spinner-loading-shade" *ngIf="spinnerService.isLoading | async">
+  <mat-spinner color="primary" [diameter]="40"></mat-spinner>
+</div>
+
 <div class="table-cntr">
 
   <table mat-table [dataSource]="users" matSort (matSortChange)="onSortChange($event)">
@@ -22,8 +26,8 @@
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
           <mat-form-field>
+            <mat-label>{{ UserAttrsEnum.createTimestamp }}</mat-label>
             <input matInput [matDatepicker]="picker"
-                   placeholder="{{UserAttrsEnum.createTimestamp}}"
                    [(ngModel)]="createTimestampSearchValue"
                    (keyup.enter)="searchUsers(UserAttrsEnum.createTimestamp, createTimestampSearchValue)"
                    (dateChange)="searchUsers(UserAttrsEnum.createTimestamp, createTimestampSearchValue)"
@@ -45,7 +49,8 @@
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
           <mat-form-field class="example-form-field">
-            <input matInput type="text" placeholder='{{ UserAttrsEnum.entryUUID }}'
+            <mat-label>{{ UserAttrsEnum.entryUUID }}</mat-label>
+            <input matInput type="text"
                    [(ngModel)]="entryUUIDSearchValue"
                    (keyup.enter)="searchUsers(UserAttrsEnum.entryUUID, entryUUIDSearchValue)"
             >
@@ -66,7 +71,8 @@
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
           <mat-form-field class="example-form-field">
-            <input matInput type="text" placeholder='{{ UserAttrsEnum.mail }}'
+            <mat-label>{{ UserAttrsEnum.mail }}</mat-label>
+            <input matInput type="text"
                    [(ngModel)]="mailSearchValue"
                    (keyup.enter)="searchUsers(UserAttrsEnum.mail, mailSearchValue)"
             >
@@ -87,7 +93,8 @@
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
           <mat-form-field class="example-form-field">
-            <input matInput type="text" placeholder="{{ UserAttrsEnum.cn }}"
+            <mat-label>{{ UserAttrsEnum.cn }}</mat-label>
+            <input matInput type="text"
                    [(ngModel)]="cnSearchValue"
                    (keyup.enter)="searchUsers(UserAttrsEnum.cn, cnSearchValue)"
             >
@@ -108,7 +115,8 @@
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
           <mat-form-field class="example-form-field">
-            <input matInput type="text" placeholder="{{ UserAttrsEnum.sn }}"
+            <mat-label>{{ UserAttrsEnum.sn }}</mat-label>
+            <input matInput type="text"
                    [(ngModel)]="snSearchValue"
                    (keyup.enter)="searchUsers(UserAttrsEnum.sn, snSearchValue)"
             >
@@ -129,7 +137,8 @@
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
           <mat-form-field class="example-form-field">
-            <input matInput type="text" placeholder="{{ UserAttrsEnum.businessCategory }}"
+            <mat-label>{{ UserAttrsEnum.businessCategory }}</mat-label>
+            <input matInput type="text"
                    [(ngModel)]="businessCategorySearchValue"
                    (keyup.enter)="searchUsers(UserAttrsEnum.businessCategory, businessCategorySearchValue)"
             >
