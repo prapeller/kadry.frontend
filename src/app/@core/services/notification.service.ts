@@ -13,11 +13,11 @@ export class NotificationService {
   ) {}
 
   public showMessage(messageType: MessageTypeEnum, message: string) {
-    if (messageType === MessageTypeEnum.error) {
-      this.snackBar.open(message, 'Close', { duration: 0 }); // Persistent snackbar for errors
-    } else {
-      this.snackBar.open(message, 'Close', { duration: 2000 }); // Auto-close after 2 seconds for success messages
-    }
+    this.snackBar.open(message, 'Close', {
+      duration: messageType === MessageTypeEnum.error ? 0 : 3000,
+      panelClass: messageType === MessageTypeEnum.error ? 'snack-bar-error' : 'snack-bar-success',
+      horizontalPosition: 'right'
+    });
   }
 
   private getBackendFastApiErrorStrFromDetail(detail: { loc: string[]; msg: string }[]): string {
@@ -55,9 +55,16 @@ export class NotificationService {
   }
 
   public successHandler<T>(response: T): T {
-    if (response && typeof response === 'object' && 'message' in response) {
-      const message = (response as any).message;
-      this.showMessage(MessageTypeEnum.success, message);
+    if (response && typeof response === 'object') {
+      let message = '';
+      if ('message' in response) {
+        message = (response as any).message;
+      } else if ('detail' in response) {
+        message = (response as any).detail;
+      }
+      if (message !== '') {
+        this.showMessage(MessageTypeEnum.success, message);
+      }
     }
     return response;
   }

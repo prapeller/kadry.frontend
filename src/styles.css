@@ -22,3 +22,15 @@ body {
     align-items: center;
     justify-content: center;
 }
+
+.snack-bar-success {
+    --mdc-snackbar-container-color: #86ff8645 !important;
+    --mdc-snackbar-supporting-text-color: #524a4a;
+    --mat-snack-bar-button-color: #524a4a;
+}
+
+.snack-bar-error {
+    --mdc-snackbar-container-color: #f5c1bd !important;
+    --mdc-snackbar-supporting-text-color: #524a4a;
+    --mat-snack-bar-button-color: #524a4a;
+}

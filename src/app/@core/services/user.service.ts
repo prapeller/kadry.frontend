@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BackendServiceV1 } from './backend.service';
 import { NotificationService } from './notification.service';
 import { HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import {
   IDefaultBusinessCategoriesParams,
   IFileData,
@@ -21,11 +21,14 @@ export class UserService {
 
   constructor(
     private _backendServiceV1: BackendServiceV1,
-    private _notificator: NotificationService,
+    private notificator: NotificationService,
   ) {}
 
   public usersCreate(payload: IUserCreate): Observable<IUserRead> {
-    return this._backendServiceV1.post('/users', payload);
+    return this._backendServiceV1.post(this.urlPrefix, payload).pipe(
+      tap(() => this.notificator.showMessage(MessageTypeEnum.success, `user is created!`)),
+      map(resp => resp as IUserRead),
+    );
   }
 
   public usersList(queryParams: IListUsersParams): Observable<IUsersPaginated> {
@@ -54,8 +57,10 @@ export class UserService {
     return this._backendServiceV1.put(`${this.urlPrefix}/${mail}`, data);
   }
 
-  public usersDelete(mail: string): Observable<string> {
-    return this._backendServiceV1.delete(`${this.urlPrefix}/${mail}`);
+  public usersDelete(mail: string): Observable<any> {
+    return this._backendServiceV1.delete(`${this.urlPrefix}/${mail}`).pipe(
+      tap(() => this.notificator.showMessage(MessageTypeEnum.success, `user is deleted!`)),
+    );
   }
 
   public usersListUserRoles(mail: string) {
@@ -64,7 +69,7 @@ export class UserService {
 
   public usersCreateOrUpdateFromExcel(data: IFileData, queryParams: IDefaultBusinessCategoriesParams | null) {
     if (data.file.type != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      return this._notificator.showMessage(MessageTypeEnum.error, 'Only Excel files are allowed.');
+      return this.notificator.showMessage(MessageTypeEnum.error, 'Only Excel files are allowed.');
     }
 
     let params = new HttpParams({ fromObject: {} });
@@ -85,7 +90,7 @@ export class UserService {
 
   public usersUpdateFromExcel(data: IFileData) {
     if (data.file.type != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      return this._notificator.showMessage(MessageTypeEnum.error, 'Only Excel files are allowed.');
+      return this.notificator.showMessage(MessageTypeEnum.error, 'Only Excel files are allowed.');
     }
     const formData: FormData = new FormData();
     formData.append('file', data.file, data.file.name);

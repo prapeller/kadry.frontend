@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../@core/services/user.service';
 import { IListUsersParams, IUserRead } from '../@core/interfaces';
-import { OrderEnum, UserAttrsEnum } from '../@core/enums';
+import { OrderEnum, UserAttrsEnum, UserBusinessCategoriesEnum } from '../@core/enums';
 import { SpinnerService } from '../@core/services/spinner.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { getEnumValues } from '../@core/shared';
 
 @Component({
   selector: 'app-user-list',
@@ -41,13 +43,23 @@ export class UserListComponent implements OnInit {
   totalUsersCount = 0;
   filteredUsersCount = 0;
 
+  createUserForm!: FormGroup;
+
   constructor(private userService: UserService,
-              protected spinnerService: SpinnerService) {}
+              protected spinnerService: SpinnerService,
+              private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.clearSorting();
     this.clearSearchInput();
     this.loadUsers();
+    this.createUserForm = this.formBuilder.group({
+      mail: ['', [Validators.required, Validators.email]],
+      cn: ['', Validators.required],
+      sn: ['', Validators.required],
+      userPassword: ['', Validators.required],
+      businessCategory: [[], Validators.required],
+    });
   }
 
   private clearSorting() {
@@ -126,12 +138,24 @@ export class UserListComponent implements OnInit {
   }
 
   public onDelete(mail: string) {
-    // Implement deletion logic here
+    this.userService.usersDelete(mail).subscribe({
+      next: () => {this.loadUsers();}
+    });
   }
 
   public onEdit(user: IUserRead) {
     // Implement edit logic here
   }
 
+  onCreateUser() {
+    if (this.createUserForm.valid) {
+      this.userService.usersCreate(this.createUserForm.value).subscribe({
+        next: () => {this.loadUsers();}
+      });
+    }
+  }
+
   protected readonly UserAttrsEnum = UserAttrsEnum;
+  protected readonly UserBusinessCategoriesEnum = UserBusinessCategoriesEnum;
+  protected readonly getEnumValues = getEnumValues;
 }

@@ -9,11 +9,12 @@ export enum OrderEnum {
 }
 
 export enum UserAttrsEnum {
-  createTimestamp = 'createTimestamp',
   mail = 'mail',
   cn = 'cn',
   sn = 'sn',
   businessCategory = 'businessCategory',
+  createTimestamp = 'createTimestamp',
+  entryUUID = 'entryUUID',
   userPassword = 'userPassword',
   telephoneNumber = 'telephoneNumber',
   displayName = 'displayName',
@@ -22,11 +23,14 @@ export enum UserAttrsEnum {
   creatorsName = 'creatorsName',
   modifyTimestamp = 'modifyTimestamp',
   structuralObjectClass = 'structuralObjectClass',
-  entryUUID = 'entryUUID'
 }
 
 export enum UserBusinessCategoriesEnum {
-  express = 'express',
   rocket = 'rocket',
-  cloud = 'cloud'
+  cloud = 'cloud',
+  report = 'report',
+  banner = 'banner',
+  cash = 'cash',
+  redirect = 'redirect',
+  express = 'express',
 }

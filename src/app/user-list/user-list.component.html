@@ -2,8 +2,51 @@
   <mat-spinner color="primary" [diameter]="40"></mat-spinner>
 </div>
 
-<div class="table-cntr">
+<mat-expansion-panel class="create-user">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Create user
+    </mat-panel-title>
+  </mat-expansion-panel-header>
 
+  <form [formGroup]="createUserForm" (ngSubmit)="onCreateUser()">
+
+    <mat-form-field>
+      <mat-label>{{ UserAttrsEnum.mail }}</mat-label>
+      <input matInput formControlName="{{UserAttrsEnum.mail}}" type="email">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{ UserAttrsEnum.cn }}</mat-label>
+      <input matInput formControlName="{{UserAttrsEnum.cn}}" type="text">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{ UserAttrsEnum.sn }}</mat-label>
+      <input matInput formControlName="{{UserAttrsEnum.sn}}" type="text">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{ UserAttrsEnum.userPassword }}</mat-label>
+      <input matInput formControlName="{{UserAttrsEnum.userPassword}}" type="text">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{ UserAttrsEnum.businessCategory }}</mat-label>
+      <mat-select formControlName="{{UserAttrsEnum.businessCategory}}" multiple>
+        <mat-option *ngFor="let category of getEnumValues(UserBusinessCategoriesEnum)" [value]="category">
+          {{ category }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-icon-button type="submit">
+      <mat-icon>add</mat-icon>
+    </button>
+  </form>
+</mat-expansion-panel>
+
+<div class="table-cntr">
   <table mat-table [dataSource]="users" matSort (matSortChange)="onSortChange($event)">
 
     <!-- Actions Column -->
@@ -22,50 +65,6 @@
     </ng-container>
 
     <!-- User Columns -->
-    <ng-container matColumnDef='{{UserAttrsEnum.createTimestamp}}'>
-      <th mat-header-cell *matHeaderCellDef>
-        <div class="input-sort-wrapper">
-          <mat-form-field>
-            <mat-label>{{ UserAttrsEnum.createTimestamp }}</mat-label>
-            <input matInput [matDatepicker]="picker"
-                   [(ngModel)]="createTimestampSearchValue"
-                   (keyup.enter)="searchUsers(UserAttrsEnum.createTimestamp, createTimestampSearchValue)"
-                   (dateChange)="searchUsers(UserAttrsEnum.createTimestamp, createTimestampSearchValue)"
-            >
-            <button mat-icon-button *ngIf="createTimestampSearchValue !== ''" matSuffix aria-label="Clear"
-                    (click)="clearSearchInput()">
-              <mat-icon>close</mat-icon>
-            </button>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-          <div mat-sort-header='{{ UserAttrsEnum.createTimestamp }}'></div>
-        </div>
-      </th>
-      <td mat-cell *matCellDef="let user"> {{ user.createTimestamp | date:'M/dd/yyyy HH:mm' }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef='{{ UserAttrsEnum.entryUUID }}'>
-      <th mat-header-cell *matHeaderCellDef>
-        <div class="input-sort-wrapper">
-          <mat-form-field class="example-form-field">
-            <mat-label>{{ UserAttrsEnum.entryUUID }}</mat-label>
-            <input matInput type="text"
-                   [(ngModel)]="entryUUIDSearchValue"
-                   (keyup.enter)="searchUsers(UserAttrsEnum.entryUUID, entryUUIDSearchValue)"
-            >
-            <button mat-icon-button *ngIf="entryUUIDSearchValue" matSuffix aria-label="Clear"
-                    (click)="clearSearchInput()">
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-          <div mat-sort-header='{{ UserAttrsEnum.entryUUID }}'></div>
-        </div>
-      </th>
-      <td mat-cell *matCellDef="let user" [matTooltip]="user.entryUUID"
-          matTooltipShowDelay="800"> {{ user.entryUUID }}
-      </td>
-    </ng-container>
 
     <ng-container matColumnDef='{{ UserAttrsEnum.mail }}'>
       <th mat-header-cell *matHeaderCellDef>
@@ -151,6 +150,49 @@
       </th>
       <td mat-cell *matCellDef="let user" [matTooltip]="user.businessCategory"
           matTooltipShowDelay="800"> {{ user.businessCategory }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef='{{UserAttrsEnum.createTimestamp}}'>
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="input-sort-wrapper">
+          <mat-form-field>
+            <mat-label>{{ UserAttrsEnum.createTimestamp }}</mat-label>
+            <input matInput [matDatepicker]="picker" (focus)="picker.open()" readonly
+                   [(ngModel)]="createTimestampSearchValue"
+                   (dateChange)="searchUsers(UserAttrsEnum.createTimestamp, createTimestampSearchValue)"
+            >
+            <button mat-icon-button *ngIf="createTimestampSearchValue !== ''" matSuffix aria-label="Clear"
+                    (click)="clearSearchInput()">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <div mat-sort-header='{{ UserAttrsEnum.createTimestamp }}'></div>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let user"> {{ user.createTimestamp | date:'M/dd/yyyy HH:mm' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef='{{ UserAttrsEnum.entryUUID }}'>
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="input-sort-wrapper">
+          <mat-form-field class="example-form-field">
+            <mat-label>{{ UserAttrsEnum.entryUUID }}</mat-label>
+            <input matInput type="text"
+                   [(ngModel)]="entryUUIDSearchValue"
+                   (keyup.enter)="searchUsers(UserAttrsEnum.entryUUID, entryUUIDSearchValue)"
+            >
+            <button mat-icon-button *ngIf="entryUUIDSearchValue" matSuffix aria-label="Clear"
+                    (click)="clearSearchInput()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <div mat-sort-header='{{ UserAttrsEnum.entryUUID }}'></div>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let user" [matTooltip]="user.entryUUID"
+          matTooltipShowDelay="800"> {{ user.entryUUID }}
       </td>
     </ng-container>
 

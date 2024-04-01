@@ -6,14 +6,16 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOption } from '@angular/material/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatSelect } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
@@ -63,6 +65,10 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatDatepickerModule,
     MatNativeDateModule,
     MatProgressSpinner,
+    ReactiveFormsModule,
+    MatSelect,
+    MatOption,
+    MatExpansionModule,
   ],
   providers: [
     {

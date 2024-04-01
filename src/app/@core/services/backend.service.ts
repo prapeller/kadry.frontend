@@ -13,35 +13,34 @@ export class BackendService {
 
   constructor(
     private _http: HttpClient,
-    private _notificator: NotificationService,
+    private notificator: NotificationService,
   ) {}
 
 
   public get<T>(_url: string, options = {}): Observable<T> {
     return this._http.get<T>(this.baseUrl + this.apiVersionUrl + _url, options)
-      .pipe(catchError((err) => this._notificator.errorHandler(err)));
+      .pipe(
+        catchError((err) => this.notificator.errorHandler(err))
+      );
   }
 
   public post<T>(_url: string, data: any, options = {}): Observable<T> {
     return this._http.post<T>(this.baseUrl + this.apiVersionUrl + _url, data, options)
       .pipe(
-        map((resp) => this._notificator.successHandler(resp)),
-        catchError((err) => this._notificator.errorHandler(err)),
+        catchError((err) => this.notificator.errorHandler(err)),
       );
   }
 
   public put<T>(_url: string, data: any, options = {}): Observable<T> {
     return this._http.put<T>(this.baseUrl + this.apiVersionUrl + _url, data, options)
       .pipe(
-        map((resp) => this._notificator.successHandler(resp)),
-        catchError((err) => this._notificator.errorHandler(err)));
+        catchError((err) => this.notificator.errorHandler(err)));
   }
 
   public delete<T>(_url: string, options = {}): Observable<T> {
     return this._http.delete<T>(this.baseUrl + this.apiVersionUrl + _url, options)
       .pipe(
-        map((resp) => this._notificator.successHandler(resp)),
-        catchError((err) => this._notificator.errorHandler(err)));
+        catchError((err) => this.notificator.errorHandler(err)));
   }
 }
 
