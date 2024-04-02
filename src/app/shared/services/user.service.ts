@@ -9,7 +9,7 @@ import {
   IListUsersParams,
   IUserCreate,
   IUserRead,
-  IUsersPaginated
+  IUsersPaginated, IUserUpdate
 } from '../interfaces';
 import { MessageTypeEnum } from '../enums';
 
@@ -24,8 +24,8 @@ export class UserService {
     private notificator: NotificationService,
   ) {}
 
-  public usersCreate(payload: IUserCreate): Observable<IUserRead> {
-    return this._backendServiceV1.post(this.urlPrefix, payload).pipe(
+  public usersCreate(data: IUserCreate): Observable<IUserRead> {
+    return this._backendServiceV1.post(this.urlPrefix, data).pipe(
       tap(() => this.notificator.showMessage(MessageTypeEnum.success, `user is created!`)),
       map(resp => resp as IUserRead),
     );
@@ -53,8 +53,11 @@ export class UserService {
     return this._backendServiceV1.get(`${this.urlPrefix}/${mail}`);
   }
 
-  public usersUpdate(mail: string, data: any): Observable<IUserRead> {
-    return this._backendServiceV1.put(`${this.urlPrefix}/${mail}`, data);
+  public usersUpdate(mail: string, data: IUserUpdate): Observable<IUserRead> {
+    return this._backendServiceV1.put(`${this.urlPrefix}/${mail}`, data).pipe(
+      tap(() => this.notificator.showMessage(MessageTypeEnum.success, `user is updated!`)),
+      map((resp => resp as IUserRead))
+    );
   }
 
   public usersDelete(mail: string): Observable<any> {

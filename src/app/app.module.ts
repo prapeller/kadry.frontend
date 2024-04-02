@@ -3,7 +3,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -22,9 +22,12 @@ import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { UserListComponent } from './user-list/user-list.component';
-import { AuthGuard } from './@core/guards/auth-guard';
-import { SpinnerInterceptor } from './@core/interceptors/spinner.interceptor';
+import { UserListComponent } from './components/user-list/user-list.component';
+import { AuthGuard } from './guards/auth-guard';
+import { SpinnerInterceptor } from './shared/interceptors/spinner.interceptor';
+import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
+import { CapitalizePipe } from './shared/pipes';
 
 
 function initializeKeycloak(keycloak: KeycloakService) {
@@ -45,7 +48,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
 @NgModule({
   declarations: [
     AppComponent,
-    UserListComponent
+    UserListComponent,
+    ConfirmDialogComponent,
+    CapitalizePipe
   ],
   imports: [
     BrowserModule,
@@ -69,6 +74,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatSelect,
     MatOption,
     MatExpansionModule,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatDialogClose,
+    MatButton
   ],
   providers: [
     {

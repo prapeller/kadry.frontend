@@ -4,10 +4,6 @@ export interface IFileData {
   file: File;
 }
 
-export interface IQueryParams {
-  [key: string]: string | string[];
-}
-
 export interface IDefaultBusinessCategoriesParams {
   default_business_categories: UserBusinessCategoriesEnum | UserBusinessCategoriesEnum[];
 }
@@ -20,6 +16,19 @@ export interface IListUsersParams {
   order_by: UserAttrsEnum;
   attr?: UserAttrsEnum;
   attr_value?: string;
+}
+
+export interface IUserUpdate {
+  mail?: string;
+  cn?: string;
+  sn?: string;
+  userPassword?: string;
+  telephoneNumber?: string;
+  businessCategory?: string[];
+  displayName?: string;
+  employeeType?: string[];
+  employeeNumber?: string;
+  creatorsName?: string;
 }
 
 export interface IUserRead {

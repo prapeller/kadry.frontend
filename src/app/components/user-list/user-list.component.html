@@ -54,11 +54,17 @@
       <th mat-header-cell *matHeaderCellDef> Actions</th>
       <td mat-cell *matCellDef="let user">
         <div class="action-buttons">
-          <button mat-icon-button (click)="onEdit(user)">
+          <button mat-icon-button *ngIf="editingRowId !== user.entryUUID" (click)="startEdit(user.entryUUID)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button (click)="onDelete(user.mail)">
+          <button mat-icon-button *ngIf="editingRowId !== user.entryUUID" (click)="onDelete(user.mail)">
             <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button *ngIf="editingRowId === user.entryUUID" (click)="saveEdit(user.mail)">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button *ngIf="editingRowId === user.entryUUID" (click)="cancelEdit()">
+            <mat-icon>cancel</mat-icon>
           </button>
         </div>
       </td>
@@ -69,7 +75,7 @@
     <ng-container matColumnDef='{{ UserAttrsEnum.mail }}'>
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
-          <mat-form-field class="example-form-field">
+          <mat-form-field>
             <mat-label>{{ UserAttrsEnum.mail }}</mat-label>
             <input matInput type="text"
                    [(ngModel)]="mailSearchValue"
@@ -83,15 +89,23 @@
           <div mat-sort-header='{{ UserAttrsEnum.mail }}'></div>
         </div>
       </th>
-      <td mat-cell *matCellDef="let user" [matTooltip]="user.mail"
-          matTooltipShowDelay="800"> {{ user.mail }}
+
+      <td mat-cell *matCellDef="let user" [matTooltip]="user.mail" matTooltipShowDelay="800">
+        <div *ngIf="editingRowId === user.entryUUID; else viewMode">
+          <mat-form-field>
+            <mat-label>{{ user.mail }}</mat-label>
+            <input matInput type="email"
+                   [(ngModel)]="userUpdate.mail">
+          </mat-form-field>
+        </div>
+        <ng-template #viewMode>{{ user.mail }}</ng-template>
       </td>
     </ng-container>
 
     <ng-container matColumnDef='{{ UserAttrsEnum.cn }}'>
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
-          <mat-form-field class="example-form-field">
+          <mat-form-field>
             <mat-label>{{ UserAttrsEnum.cn }}</mat-label>
             <input matInput type="text"
                    [(ngModel)]="cnSearchValue"
@@ -105,15 +119,22 @@
           <div mat-sort-header='{{ UserAttrsEnum.cn }}'></div>
         </div>
       </th>
-      <td mat-cell *matCellDef="let user" [matTooltip]="user.cn"
-          matTooltipShowDelay="800"> {{ user.cn }}
+      <td mat-cell *matCellDef="let user" [matTooltip]="user.cn" matTooltipShowDelay="800">
+        <div *ngIf="editingRowId === user.entryUUID; else viewMode">
+          <mat-form-field>
+            <mat-label>{{ user.cn }}</mat-label>
+            <input matInput type="text"
+                   [(ngModel)]="userUpdate.cn">
+          </mat-form-field>
+        </div>
+        <ng-template #viewMode>{{ user.cn }}</ng-template>
       </td>
     </ng-container>
 
     <ng-container matColumnDef='{{ UserAttrsEnum.sn }}'>
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
-          <mat-form-field class="example-form-field">
+          <mat-form-field>
             <mat-label>{{ UserAttrsEnum.sn }}</mat-label>
             <input matInput type="text"
                    [(ngModel)]="snSearchValue"
@@ -127,15 +148,22 @@
           <div mat-sort-header='{{ UserAttrsEnum.sn }}'></div>
         </div>
       </th>
-      <td mat-cell *matCellDef="let user" [matTooltip]="user.sn"
-          matTooltipShowDelay="800"> {{ user.sn }}
+      <td mat-cell *matCellDef="let user" [matTooltip]="user.sn" matTooltipShowDelay="800">
+        <div *ngIf="editingRowId === user.entryUUID; else viewMode">
+          <mat-form-field>
+            <mat-label>{{ user.sn }}</mat-label>
+            <input matInput type="text"
+                   [(ngModel)]="userUpdate.sn">
+          </mat-form-field>
+        </div>
+        <ng-template #viewMode>{{ user.sn }}</ng-template>
       </td>
     </ng-container>
 
     <ng-container matColumnDef='{{ UserAttrsEnum.businessCategory }}'>
       <th mat-header-cell *matHeaderCellDef>
         <div class="input-sort-wrapper">
-          <mat-form-field class="example-form-field">
+          <mat-form-field>
             <mat-label>{{ UserAttrsEnum.businessCategory }}</mat-label>
             <input matInput type="text"
                    [(ngModel)]="businessCategorySearchValue"
@@ -148,8 +176,19 @@
           </mat-form-field>
         </div>
       </th>
-      <td mat-cell *matCellDef="let user" [matTooltip]="user.businessCategory"
-          matTooltipShowDelay="800"> {{ user.businessCategory }}
+      <td mat-cell *matCellDef="let user" [matTooltip]="user.businessCategory" matTooltipShowDelay="800">
+        <div *ngIf="editingRowId === user.entryUUID; else viewMode">
+          <mat-form-field>
+            <mat-label>{{ user.businessCategory }}</mat-label>
+            <mat-select multiple [(ngModel)]="userUpdate.businessCategory">
+              <mat-option *ngFor="let category of getEnumValues(UserBusinessCategoriesEnum)" [value]="category">
+                {{ category }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+        <ng-template #viewMode>{{ user.businessCategory }}</ng-template>
       </td>
     </ng-container>
 
