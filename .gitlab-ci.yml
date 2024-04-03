@@ -1,0 +1,26 @@
+stages:
+  - build
+  - deploy
+build:
+  stage: build
+  only:
+    - release
+  when: on_success
+  script:
+    - docker build  --network=host -t $CI_PROJECT_NAME:$CI_COMMIT_SHORT_SHA .
+  tags:
+    - dev3
+deploy:
+  stage: deploy
+  tags:
+    - dev3
+  only:
+    - release
+  when: on_success
+  script:
+    - docker rm -f $CI_PROJECT_NAME || true
+    - docker run -d --name $CI_PROJECT_NAME $CI_PROJECT_NAME:$CI_COMMIT_SHORT_SHA
+    - rm -rf /var/www/html/kadry/dist/
+    - docker cp $CI_PROJECT_NAME:/kadry.frontend/dist/ /var/www/html/kadry/
+    - docker rm -f $CI_PROJECT_NAME
+    - echo "commit=$CI_COMMIT_SHORT_SHA<br>build=$CI_JOB_ID" > /var/www/html/kadry/dist/version.html
