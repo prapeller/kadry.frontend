@@ -1,0 +1,14 @@
+<div mat-dialog-content class="upload-dialog-content">
+  <input type="file" id="file" (change)="onFileSelected($event)" hidden>
+  <label for="file" class="file-input-label" matRipple [matRippleCentered]="true">
+    <mat-icon>attach_file</mat-icon>
+    Click to select file or drag it here
+  </label>
+  <div class="drag-area" appDragDrop (fileDropped)="onFileDropped($event)">
+    Drag files here
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="null">Cancel</button>
+  <button mat-button [disabled]="!selectedFile" (click)="uploadFile()">Upload</button>
+</div>

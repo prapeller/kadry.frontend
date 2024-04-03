@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule, MatOption } from '@angular/material/core';
+import { MatNativeDateModule, MatOption, MatRipple } from '@angular/material/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatSelect } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -28,6 +28,12 @@ import { SpinnerInterceptor } from './shared/interceptors/spinner.interceptor';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import { CapitalizePipe } from './shared/pipes';
+import { UploadDialogComponent } from './shared/components/upload-dialog/upload-dialog.component';
+import { DragDropDirective } from './shared/directives';
+import { MatDivider } from '@angular/material/divider';
+import {
+  AfterUploadUsersDialogComponent
+} from './components/after-upload-users-dialog/after-upload-users-dialog.component';
 
 
 function initializeKeycloak(keycloak: KeycloakService) {
@@ -50,7 +56,10 @@ function initializeKeycloak(keycloak: KeycloakService) {
     AppComponent,
     UserListComponent,
     ConfirmDialogComponent,
-    CapitalizePipe
+    UploadDialogComponent,
+    CapitalizePipe,
+    DragDropDirective,
+    AfterUploadUsersDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,7 +87,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
-    MatButton
+    MatButton,
+    MatRipple,
+    MatDivider
   ],
   providers: [
     {

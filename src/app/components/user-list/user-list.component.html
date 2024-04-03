@@ -44,7 +44,16 @@
       <mat-icon>add</mat-icon>
     </button>
   </form>
+
+  <div class="button-row">
+    <button mat-raised-button color="primary" (click)="downloadUsersUploadTemplate()">Download Template</button>
+    <button mat-raised-button color="accent" (click)="openUploadDialog()">Upload</button>
+  </div>
+
+  <mat-divider></mat-divider>
+
 </mat-expansion-panel>
+
 
 <div class="table-cntr">
   <table mat-table [dataSource]="users" matSort (matSortChange)="onSortChange($event)">

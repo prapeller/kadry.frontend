@@ -82,3 +82,13 @@
     padding-right: 16px; /* Adjust this to prevent the scrollbar from overlapping the form */
     margin-right: 16px; /* Adjust margin to align with table columns */
 }
+
+.button-row {
+    display: flex;
+    justify-content: right;
+
+}
+
+.mat-mdc-raised-button {
+    margin: 10px 10px;
+}

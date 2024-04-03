@@ -6,6 +6,10 @@ import { SpinnerService } from '../../shared/services/spinner.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { getEnumValues } from '../../shared/functions';
 import { DialogService } from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { UploadDownloadService } from '../../shared/services/upload-download.service';
+import { UploadDialogComponent } from '../../shared/components/upload-dialog/upload-dialog.component';
+import { AfterUploadUsersDialogComponent } from '../after-upload-users-dialog/after-upload-users-dialog.component';
 
 @Component({
   selector: 'app-user-list',
@@ -49,10 +53,15 @@ export class UserListComponent implements OnInit {
   editingRowId: string | null = null;
   userUpdate: IUserUpdate = {};
 
-  constructor(private userService: UserService,
-              protected spinnerService: SpinnerService,
-              private formBuilder: FormBuilder,
-              public dialogService: DialogService) {}
+
+  constructor(
+    private userService: UserService,
+    protected spinnerService: SpinnerService,
+    private formBuilder: FormBuilder,
+    public dialogService: DialogService,
+    private dialog: MatDialog,
+    private uploadDownloadService: UploadDownloadService,
+  ) {}
 
   ngOnInit() {
     this.clearSorting();
@@ -158,12 +167,12 @@ export class UserListComponent implements OnInit {
 
   public cancelEdit() {
     this.editingRowId = null;
-    this.userUpdate = {}
+    this.userUpdate = {};
   }
 
   public saveEdit(mail: string) {
     this.userService.usersUpdate(mail, this.userUpdate).subscribe({
-      next: () => {this.loadUsers()}
+      next: () => {this.loadUsers();}
     });
     this.cancelEdit();
   }
@@ -174,6 +183,37 @@ export class UserListComponent implements OnInit {
         next: () => {this.loadUsers();}
       });
     }
+  }
+
+  downloadUsersUploadTemplate(): void {
+    this.uploadDownloadService.downloadUsersUploadTemplateExcelFile().subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'users_upload_template.xlsx';
+      link.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
+
+  openUploadDialog(): void {
+    const dialogRef = this.dialog.open(UploadDialogComponent, {
+      width: '600px',
+    });
+
+    dialogRef.afterClosed().subscribe(selectedFile => {
+      if (selectedFile) {
+        this.uploadDownloadService.createOrUpdateFromExcel(selectedFile).subscribe({
+          next: (resp) => {
+            this.dialog.open(AfterUploadUsersDialogComponent, {
+              width: '1200px',
+              data: { created: resp.created, updated: resp.updated },
+            });
+            this.loadUsers();
+          }
+        });
+      }
+    });
   }
 
   protected readonly UserAttrsEnum = UserAttrsEnum;
